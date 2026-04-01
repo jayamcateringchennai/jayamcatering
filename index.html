@@ -49,6 +49,91 @@
     );
   }
 
+  /* ── FOOD CAROUSEL ── */
+  .carousel-section {
+    background: var(--cream);
+    padding: 4rem 1.5rem;
+    overflow: hidden;
+  }
+  .carousel-header {
+    max-width: 1050px;
+    margin: 0 auto 2.5rem;
+  }
+  .carousel-wrapper {
+    max-width: 1050px;
+    margin: 0 auto;
+    position: relative;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 8px 40px rgba(0,0,0,0.15);
+  }
+  .carousel-track {
+    display: flex;
+    transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .carousel-slide {
+    min-width: 100%;
+    position: relative;
+  }
+  .carousel-slide img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+  }
+  .slide-caption {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    background: linear-gradient(transparent, rgba(26,10,0,0.85));
+    color: #fff;
+    padding: 2rem 1.5rem 1.2rem;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.3rem;
+    font-style: italic;
+  }
+  .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(232,101,10,0.85);
+    color: #fff;
+    border: none;
+    width: 44px; height: 44px;
+    border-radius: 50%;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .carousel-btn:hover { background: var(--deep-red); transform: translateY(-50%) scale(1.1); }
+  .carousel-btn.prev { left: 1rem; }
+  .carousel-btn.next { right: 1rem; }
+  .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.2rem;
+  }
+  .carousel-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: rgba(232,101,10,0.3);
+    cursor: pointer;
+    transition: all 0.3s;
+    border: none;
+  }
+  .carousel-dot.active {
+    background: var(--saffron);
+    transform: scale(1.3);
+  }
+  @media(max-width:700px){
+    .carousel-slide img { height: 240px; }
+    .slide-caption { font-size: 1rem; }
+  }
+
   /* ── NAVBAR ── */
   nav {
     background: var(--dark);
@@ -958,6 +1043,54 @@
   </div>
 </section>
 
+<!-- FOOD IMAGE CAROUSEL -->
+<section class="carousel-section">
+  <div class="carousel-header">
+    <p class="section-label">Our Food | எங்கள் உணவு</p>
+    <h2 class="section-title">A Feast for the Eyes 👁️ & Soul 🙏</h2>
+    <p class="section-title-tamil">கண்களுக்கும் மனதிற்கும் விருந்து</p>
+  </div>
+  <div class="carousel-wrapper">
+    <div class="carousel-track" id="carouselTrack">
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1567337710282-00832b415979?w=600&q=80" alt="South Indian Thali" loading="lazy">
+        <div class="slide-caption">South Indian Thali | தென்னிந்திய சாப்பாடு</div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1589301760014-d929f3979dbc?w=600&q=80" alt="Biryani" loading="lazy">
+        <div class="slide-caption">Veg Biryani | வெஜ் பிரியாணி</div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1630409351217-bc4fa6422075?w=600&q=80" alt="Idli Dosa" loading="lazy">
+        <div class="slide-caption">Idli & Dosa | இட்லி & தோசை</div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1601050690597-df0568f70950?w=600&q=80" alt="Sambar Rice" loading="lazy">
+        <div class="slide-caption">Sambar Rice | சாம்பார் சாதம்</div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1505253716362-afaea1d3d1af?w=600&q=80" alt="Paneer Curry" loading="lazy">
+        <div class="slide-caption">Paneer Curry | பனீர் குழம்பு</div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1606491956689-2ea866880c84?w=600&q=80" alt="Indian Sweets" loading="lazy">
+        <div class="slide-caption">Sweets & Desserts | இனிப்பு வகைகள்</div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1548943487-a2e4e43b4853?w=600&q=80" alt="Wedding Feast" loading="lazy">
+        <div class="slide-caption">Wedding Feast | திருமண விருந்து</div>
+      </div>
+      <div class="carousel-slide">
+        <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&q=80" alt="North Indian Thali" loading="lazy">
+        <div class="slide-caption">North Indian Thali | வட இந்திய தட்டு</div>
+      </div>
+    </div>
+    <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#10094;</button>
+    <button class="carousel-btn next" onclick="moveCarousel(1)">&#10095;</button>
+  </div>
+  <div class="carousel-dots" id="carouselDots"></div>
+</section>
+
 <!-- EVENTS STRIP -->
 <div class="events-strip">
   <div class="event-item"><span class="icon">💒</span> Marriage Catering | திருமண விருந்து</div>
@@ -1208,6 +1341,33 @@
 <div class="kolam-border"></div>
 
 <script>
+  // ── CAROUSEL ──
+  let currentSlide = 0;
+  const slides = document.querySelectorAll('.carousel-slide');
+  const track = document.getElementById('carouselTrack');
+  const dotsContainer = document.getElementById('carouselDots');
+
+  // Create dots
+  slides.forEach((_, i) => {
+    const dot = document.createElement('button');
+    dot.className = 'carousel-dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goToSlide(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function goToSlide(n) {
+    currentSlide = (n + slides.length) % slides.length;
+    track.style.transform = `translateX(-${currentSlide * 100}%)`;
+    document.querySelectorAll('.carousel-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === currentSlide);
+    });
+  }
+
+  function moveCarousel(dir) { goToSlide(currentSlide + dir); }
+
+  // Auto-slide every 3 seconds
+  setInterval(() => moveCarousel(1), 3000);
+
   // Hamburger menu
   function toggleMenu() {
     document.getElementById('mobileMenu').classList.toggle('open');

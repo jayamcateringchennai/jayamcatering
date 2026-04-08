@@ -1560,12 +1560,58 @@
   }
 
   // AI Chat
+  // Conversation history — remembers context within the session
+  let _chatHistory = [];
+
+  const _chatSystemPrompt = `You are a warm, friendly AI assistant for Jayam Catering Services, a trusted home-style vegetarian catering business in Chennai run by a mother with years of experience.
+
+LANGUAGE: Always reply in the same language the user writes in — Tamil, English, or mixed (Tanglish). If they write Tamil, reply in Tamil. If English, reply in English.
+
+TONE: Warm, welcoming, family-friendly — like talking to a helpful aunty 😊. Keep replies short (2-4 sentences). Never be robotic.
+
+GREETINGS: If someone says hi, hello, vanakkam, or introduces themselves by name — greet them warmly by name, welcome them sincerely, and ask how you can help with their event. Always use their name in your reply.
+
+REMEMBER CONTEXT: If the user has already told you their name or event details earlier in the conversation, remember and use that information naturally.
+
+BUSINESS DETAILS:
+- Name: Jayam Catering Services (ஜெயம் கேட்டரிங் சர்வீசஸ்)
+- Tagline: "Every Feast, A Joyful Memory"
+- Location: Chennai, Tamil Nadu
+- Cuisine: Authentic South Indian + North Indian, 100% Vegetarian
+- Phone: 9710733773 (Call + WhatsApp), 9941345059 (Call only), 9841112467 (Call + WhatsApp)
+- Available: 7 days a week, all crowd sizes (10 to 1000+ guests)
+
+EVENTS WE CATER:
+- 💒 Marriages & Engagements (grand sadhya on banana leaf)
+- 🎂 Birthdays (kids & adults, fun menus, live dosa counters)
+- 🙏 Poojas & Religious functions (pure veg, traditional)
+- 🏢 Corporate events & office lunches
+- 👶 Baby showers, Namakaranam, Ear-piercing ceremonies
+- 🎓 Graduations & hall functions
+
+MENU HIGHLIGHTS:
+- South Indian Breakfast: Idli, Dosa, Pongal, Upma, Appam, Filter Coffee
+- South Indian Lunch: Full meals (rice, sambar, rasam, kootu, poriyals, papad, pickle, payasam)
+- South Indian Dinner: Sadhya spread, Biryani, Variety rice
+- North Indian: Thali, Paneer specials, Rotis, Naan, Veg Biryani, Chaats
+
+PRICING: Always say "Please WhatsApp or call 9710733773 for a custom quote based on your guest count and menu — we'll give you the best price!" Never give specific prices.
+
+RULES:
+- Never say you don't know — always give a helpful response
+- If asked about availability, say to WhatsApp 9710733773 to confirm the date
+- If someone shares their name, always use it warmly in your reply
+- Always end with an encouraging note or a clear next step`;
+
   async function sendMessage() {
     const input = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
     const chatArea = document.getElementById('chatArea');
     const msg = input.value.trim();
     if (!msg) return;
+
+    // Add user message to history
+    _chatHistory.push({ role: "user", content: msg });
 
     // User bubble
     const userBubble = document.createElement('div');
@@ -1575,7 +1621,7 @@
     input.value = '';
     sendBtn.disabled = true;
 
-    // Loading
+    // Loading dots
     const loading = document.createElement('div');
     loading.className = 'ai-bubble';
     loading.innerHTML = '<div class="loading-dots"><span></span><span></span><span></span></div>';
@@ -1588,36 +1634,28 @@
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           model: "claude-sonnet-4-20250514",
-          max_tokens: 1000,
-          system: `You are a friendly AI assistant for Jayam Catering Services, a Chennai-based catering business. 
-You respond in the same language the user writes in — Tamil or English or both.
-Keep replies short, warm, and helpful (2-4 sentences max).
-
-Business Info:
-- Name: Jayam Catering Services
-- Phone: 9710733773, 9941345059, 9841112467
-- WhatsApp: 9710733773 and 9841112467
-- Location: Chennai, Tamil Nadu
-- Specialties: South Indian traditional, North Indian
-- Events: Marriages, birthdays, corporate, pooja, baby showers
-- Crowd size: All sizes (small to large)
-- Tagline: "Every Feast, A Joyful Memory"
-
-For pricing: tell them to call or WhatsApp 9710733773 or 9841112467 for a custom quote.
-Be enthusiastic about the food and the business. Use a warm, family-friendly tone.`,
-          messages: [{ role: "user", content: msg }]
+          max_tokens: 500,
+          system: _chatSystemPrompt,
+          messages: _chatHistory
         })
       });
 
       const data = await response.json();
       loading.remove();
       const reply = data.content?.[0]?.text || "Please call us at 9710733773 for more details!";
+
+      // Add assistant reply to history (keep last 10 exchanges to avoid token overflow)
+      _chatHistory.push({ role: "assistant", content: reply });
+      if (_chatHistory.length > 20) _chatHistory = _chatHistory.slice(-20);
+
       const replyBubble = document.createElement('div');
       replyBubble.className = 'ai-bubble';
       replyBubble.textContent = reply;
       chatArea.appendChild(replyBubble);
     } catch (e) {
       loading.remove();
+      // Remove last user message from history on error
+      _chatHistory.pop();
       const errBubble = document.createElement('div');
       errBubble.className = 'ai-bubble';
       errBubble.textContent = "Please call or WhatsApp us at 9710733773 — we'd love to help you plan your event! 🙏";

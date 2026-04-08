@@ -1756,7 +1756,22 @@ Be enthusiastic about the food and the business. Use a warm, family-friendly ton
     }
   }
 
-  function admGenId() { return 'JCS' + Date.now().toString().slice(-6); }
+  function admGenId() {
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth() + 1).padStart(2, '0');
+    const d = String(now.getDate()).padStart(2, '0');
+    const datePrefix = `JCS${y}${m}${d}`;
+    // Find the highest existing counter for today
+    const todaysOrders = _admOrders.filter(o => o.id && o.id.startsWith(datePrefix));
+    let maxCounter = 0;
+    todaysOrders.forEach(o => {
+      const counter = parseInt(o.id.slice(-3)) || 0;
+      if (counter > maxCounter) maxCounter = counter;
+    });
+    const nextCounter = String(maxCounter + 1).padStart(3, '0');
+    return `${datePrefix}${nextCounter}`;
+  }
 
   function admRenderStats() {
     const orders = _admOrders;

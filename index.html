@@ -1335,8 +1335,170 @@
   <p class="footer-tagline">ஜெயம் கேட்டரிங் சர்வீசஸ் | Chennai</p>
   <p>"Every Feast, A Joyful Memory" — ஒவ்வொரு விருந்தும், ஒரு மகிழ்வான நினைவு</p>
   <p style="margin-top: 0.5rem;">📞 9710733773 | 9941345059 | 9841112467 | Chennai, Tamil Nadu</p>
-  <p style="margin-top: 1rem; font-size: 0.75rem; opacity: 0.4;">© 2025 Jayam Catering Services. All rights reserved.</p>
+  <!-- Secret Admin Trigger: Click © symbol 5 times rapidly -->
+  <p style="margin-top: 1rem; font-size: 0.75rem; opacity: 0.4;">
+    <span id="admin-trigger" onclick="handleAdminTrigger()" style="cursor:default; user-select:none;">© 2025 Jayam Catering Services. All rights reserved.</span>
+  </p>
 </footer>
+
+<!-- ═══════════════════════════════════════════
+     HIDDEN ADMIN PANEL — Secret access only
+═══════════════════════════════════════════ -->
+
+<!-- Admin Overlay Backdrop -->
+<div id="admin-backdrop" onclick="closeAdmin()" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9000; backdrop-filter:blur(4px);"></div>
+
+<!-- Admin Drawer -->
+<div id="admin-drawer" style="display:none; position:fixed; top:0; right:0; bottom:0; width:100%; max-width:1100px; background:#f8f4ef; z-index:9001; overflow-y:auto; box-shadow:-10px 0 40px rgba(0,0,0,0.3); transform:translateX(100%); transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);">
+
+  <!-- Admin Login Screen (inside drawer) -->
+  <div id="adm-login" style="display:flex; align-items:center; justify-content:center; min-height:100vh; background:linear-gradient(160deg,#1A0A00,#3D1200,#1A0A00);">
+    <div style="background:rgba(255,255,255,0.06); border:1px solid rgba(201,150,26,0.2); border-radius:16px; padding:2.5rem; width:100%; max-width:380px; margin:1rem;">
+      <div style="font-family:'Yatra One',cursive; color:#C9961A; font-size:1.8rem; text-align:center; margin-bottom:0.3rem;">Jayam <span style="color:#E8650A;">Admin</span></div>
+      <div style="font-family:'Noto Sans Tamil',sans-serif; color:rgba(245,230,192,0.4); font-size:0.8rem; text-align:center; margin-bottom:2rem;">நிர்வாக பலகை</div>
+      <div id="adm-error" style="display:none; background:rgba(220,38,38,0.2); border:1px solid rgba(220,38,38,0.4); color:#fca5a5; border-radius:6px; padding:0.6rem 1rem; font-size:0.85rem; margin-bottom:1rem;">❌ Wrong password. Please try again.</div>
+      <label style="display:block; color:rgba(245,230,192,0.6); font-size:0.78rem; letter-spacing:1px; text-transform:uppercase; margin-bottom:0.5rem;">Password</label>
+      <input type="password" id="adm-pass" placeholder="Enter admin password..." onkeypress="if(event.key==='Enter')admLogin()"
+        style="width:100%; background:rgba(255,255,255,0.07); border:1px solid rgba(201,150,26,0.2); border-radius:8px; padding:0.8rem 1rem; color:#fff; font-family:'DM Sans',sans-serif; font-size:0.95rem; outline:none; margin-bottom:1.2rem; transition:border-color 0.3s;">
+      <button onclick="admLogin()" style="width:100%; background:#E8650A; color:#fff; border:none; border-radius:8px; padding:0.9rem; font-family:'DM Sans',sans-serif; font-size:1rem; font-weight:600; cursor:pointer; transition:all 0.3s; margin-bottom:0.8rem;">🔐 Login</button>
+      <button onclick="closeAdmin()" style="width:100%; background:transparent; color:rgba(245,230,192,0.4); border:1px solid rgba(245,230,192,0.1); border-radius:8px; padding:0.6rem; font-family:'DM Sans',sans-serif; font-size:0.85rem; cursor:pointer;">✕ Cancel</button>
+    </div>
+  </div>
+
+  <!-- Admin Dashboard (inside drawer) -->
+  <div id="adm-panel" style="display:none; font-family:'DM Sans',sans-serif;">
+
+    <!-- Admin Header -->
+    <div style="background:#1A0A00; padding:1rem 1.5rem; display:flex; align-items:center; justify-content:space-between; position:sticky; top:0; z-index:10; box-shadow:0 2px 12px rgba(0,0,0,0.3);">
+      <div>
+        <div style="font-family:'Yatra One',cursive; color:#C9961A; font-size:1.2rem;">Jayam <span style="color:#E8650A;">Admin</span></div>
+        <div style="font-size:0.65rem; color:rgba(245,230,192,0.3); letter-spacing:2px; text-transform:uppercase;">Order Management</div>
+      </div>
+      <div style="display:flex; gap:0.6rem; align-items:center;">
+        <button onclick="admShowTab('new')" style="background:#E8650A; color:#fff; border:none; border-radius:6px; padding:0.5rem 1rem; font-family:'DM Sans',sans-serif; font-size:0.82rem; font-weight:500; cursor:pointer;">➕ New Order</button>
+        <button onclick="admLogout()" style="background:transparent; color:rgba(245,230,192,0.5); border:1px solid rgba(245,230,192,0.15); border-radius:6px; padding:0.5rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.82rem; cursor:pointer;">🚪 Logout</button>
+        <button onclick="closeAdmin()" style="background:transparent; color:rgba(245,230,192,0.4); border:none; font-size:1.3rem; cursor:pointer; padding:0 0.3rem;">✕</button>
+      </div>
+    </div>
+
+    <div style="padding:1.5rem; max-width:1060px; margin:0 auto;">
+
+      <!-- Stats -->
+      <div id="adm-stats" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:1rem; margin-bottom:1.5rem;"></div>
+
+      <!-- Tab Bar -->
+      <div style="display:flex; gap:0.2rem; border-bottom:2px solid #e8ddd0; margin-bottom:1.5rem;">
+        <button class="adm-tab active" id="adm-tab-orders" onclick="admShowTab('orders')" style="padding:0.6rem 1.2rem; background:none; border:none; border-bottom:2px solid #E8650A; margin-bottom:-2px; font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:500; color:#E8650A; cursor:pointer;">📋 All Orders</button>
+        <button class="adm-tab" id="adm-tab-new" onclick="admShowTab('new')" style="padding:0.6rem 1.2rem; background:none; border:none; border-bottom:2px solid transparent; margin-bottom:-2px; font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:500; color:#8a7060; cursor:pointer;">➕ New Order</button>
+      </div>
+
+      <!-- Orders List -->
+      <div id="adm-orders-panel">
+        <div style="background:#fff; border:1px solid #e8ddd0; border-radius:12px; overflow:hidden;">
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:1rem 1.5rem; border-bottom:1px solid #e8ddd0; flex-wrap:wrap; gap:0.6rem;">
+            <div style="font-weight:600; font-size:0.95rem;">Orders</div>
+            <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+              <input type="text" id="adm-search" placeholder="🔍 Name or phone..." oninput="admRenderTable()"
+                style="border:1px solid #e8ddd0; border-radius:6px; padding:0.4rem 0.7rem; font-family:'DM Sans',sans-serif; font-size:0.82rem; outline:none;">
+              <select id="adm-filter-event" onchange="admRenderTable()"
+                style="border:1px solid #e8ddd0; border-radius:6px; padding:0.4rem 0.7rem; font-family:'DM Sans',sans-serif; font-size:0.82rem; outline:none; background:#f8f4ef;">
+                <option value="">All Events</option>
+                <option>Marriage</option><option>Birthday</option><option>Corporate</option><option>Religious</option><option>Other</option>
+              </select>
+              <input type="month" id="adm-filter-month" onchange="admRenderTable()"
+                style="border:1px solid #e8ddd0; border-radius:6px; padding:0.4rem 0.7rem; font-family:'DM Sans',sans-serif; font-size:0.82rem; outline:none;">
+              <button onclick="admClearFilters()" style="border:1px solid #e8ddd0; border-radius:6px; padding:0.4rem 0.7rem; font-family:'DM Sans',sans-serif; font-size:0.82rem; background:#f8f4ef; cursor:pointer; color:#8a7060;">✕</button>
+            </div>
+          </div>
+          <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse;" id="adm-table">
+              <thead>
+                <tr style="background:#f8f4ef;">
+                  <th style="padding:0.7rem 1rem; text-align:left; font-size:0.72rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; white-space:nowrap;">ID</th>
+                  <th style="padding:0.7rem 1rem; text-align:left; font-size:0.72rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px;">Customer</th>
+                  <th style="padding:0.7rem 1rem; text-align:left; font-size:0.72rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px;">Event</th>
+                  <th style="padding:0.7rem 1rem; text-align:left; font-size:0.72rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; white-space:nowrap;">Event Date</th>
+                  <th style="padding:0.7rem 1rem; text-align:center; font-size:0.72rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px;">Guests</th>
+                  <th style="padding:0.7rem 1rem; text-align:left; font-size:0.72rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px;">Total</th>
+                  <th style="padding:0.7rem 1rem; text-align:left; font-size:0.72rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px;">Advance</th>
+                  <th style="padding:0.7rem 1rem; text-align:left; font-size:0.72rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px;">Balance</th>
+                  <th style="padding:0.7rem 1rem; text-align:left; font-size:0.72rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px;">Status</th>
+                  <th style="padding:0.7rem 1rem; text-align:left; font-size:0.72rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adm-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- New Order Form -->
+      <div id="adm-new-panel" style="display:none;">
+        <div style="background:#fff; border:1px solid #e8ddd0; border-radius:12px; padding:1.5rem;">
+          <div id="adm-form-title" style="font-family:'Yatra One',cursive; font-size:1.2rem; color:#E8650A; margin-bottom:1.2rem; padding-bottom:0.8rem; border-bottom:1px solid #e8ddd0;">📝 Add New Order</div>
+          <input type="hidden" id="adm-edit-id">
+          <div style="display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:1rem;">
+            <div><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Customer Name *</label>
+              <input type="text" id="af-name" placeholder="e.g. Ramesh Kumar" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef;"></div>
+            <div><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Phone Number *</label>
+              <input type="tel" id="af-phone" placeholder="e.g. 9876543210" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef;"></div>
+            <div><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Event Type *</label>
+              <select id="af-event" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef;">
+                <option value="">Select Event</option>
+                <option>Marriage</option><option>Birthday</option><option>Corporate</option><option>Religious</option><option>Other</option>
+              </select></div>
+            <div><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Event Date & Time *</label>
+              <input type="datetime-local" id="af-date" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef;"></div>
+            <div><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Number of Guests *</label>
+              <input type="number" id="af-guests" placeholder="e.g. 200" min="1" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef;"></div>
+            <div><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Menu Selected</label>
+              <select id="af-menu" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef;">
+                <option value="">Select Menu</option>
+                <option>South Indian Breakfast</option><option>South Indian Lunch</option><option>South Indian Dinner</option>
+                <option>North Indian Breakfast</option><option>North Indian Lunch</option><option>North Indian Dinner</option>
+                <option>Full Day South Indian</option><option>Full Day North Indian</option><option>Custom Menu</option>
+              </select></div>
+            <div><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Total Amount (₹) *</label>
+              <input type="number" id="af-total" placeholder="e.g. 25000" min="0" oninput="admCalcBalance()" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef;"></div>
+            <div><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Advance Paid (₹)</label>
+              <input type="number" id="af-advance" placeholder="e.g. 10000" min="0" oninput="admCalcBalance()" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef;"></div>
+            <div><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Balance Due (₹)</label>
+              <input type="number" id="af-balance" readonly style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#eeece8; color:#8a7060;"></div>
+            <div><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Payment Status</label>
+              <select id="af-status" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef;">
+                <option value="Pending">Pending</option><option value="Partial">Partial (Advance Paid)</option><option value="Paid">Fully Paid</option>
+              </select></div>
+            <div style="grid-column:1/-1;"><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Event Address</label>
+              <input type="text" id="af-address" placeholder="e.g. 45, Anna Nagar, Chennai - 600040" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef;"></div>
+            <div style="grid-column:1/-1;"><label style="display:block; font-size:0.75rem; font-weight:600; color:#8a7060; text-transform:uppercase; letter-spacing:0.8px; margin-bottom:0.4rem;">Special Notes</label>
+              <textarea id="af-notes" placeholder="e.g. No onion, extra sweet counter, setup by 8am..." rows="3" style="width:100%; border:1.5px solid #e8ddd0; border-radius:8px; padding:0.65rem 0.9rem; font-family:'DM Sans',sans-serif; font-size:0.9rem; outline:none; background:#f8f4ef; resize:vertical;"></textarea></div>
+          </div>
+          <div style="display:flex; gap:0.8rem; justify-content:flex-end; margin-top:1.5rem; padding-top:1rem; border-top:1px solid #e8ddd0;">
+            <button onclick="admResetForm()" style="border:1px solid #e8ddd0; border-radius:6px; padding:0.6rem 1.2rem; font-family:'DM Sans',sans-serif; font-size:0.88rem; background:#f8f4ef; cursor:pointer; color:#8a7060;">✕ Clear</button>
+            <button onclick="admSaveOrder()" style="background:#E8650A; color:#fff; border:none; border-radius:6px; padding:0.6rem 1.4rem; font-family:'DM Sans',sans-serif; font-size:0.88rem; font-weight:600; cursor:pointer;">💾 Save Order</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Receipt Modal -->
+<div id="adm-receipt-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:9100; display:none; align-items:center; justify-content:center; padding:1rem;">
+  <div style="background:#fff; border-radius:16px; width:100%; max-width:660px; max-height:90vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.4);">
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:1.2rem 1.5rem; border-bottom:1px solid #e8ddd0; position:sticky; top:0; background:#fff;">
+      <div style="font-weight:600;">🧾 Order Receipt</div>
+      <button onclick="admCloseReceipt()" style="background:none; border:none; font-size:1.3rem; cursor:pointer; color:#8a7060;">✕</button>
+    </div>
+    <div style="padding:1.5rem;" id="adm-receipt-content"></div>
+    <div style="padding:1rem 1.5rem; border-top:1px solid #e8ddd0; display:flex; gap:0.8rem; justify-content:flex-end;">
+      <button onclick="admCloseReceipt()" style="border:1px solid #e8ddd0; border-radius:6px; padding:0.6rem 1.2rem; font-family:'DM Sans',sans-serif; font-size:0.85rem; background:#f8f4ef; cursor:pointer;">Close</button>
+      <button onclick="admEmailReceipt()" style="background:#1a73e8; color:#fff; border:none; border-radius:6px; padding:0.6rem 1.2rem; font-family:'DM Sans',sans-serif; font-size:0.85rem; cursor:pointer;">📧 Email</button>
+      <button onclick="window.print()" style="background:#E8650A; color:#fff; border:none; border-radius:6px; padding:0.6rem 1.2rem; font-family:'DM Sans',sans-serif; font-size:0.85rem; cursor:pointer;">🖨️ Print</button>
+    </div>
+  </div>
+</div>
 
 <div class="kolam-border"></div>
 
@@ -1466,7 +1628,344 @@ Be enthusiastic about the food and the business. Use a warm, family-friendly ton
     chatArea.scrollTop = chatArea.scrollHeight;
   }
 
-  // Fade-in on scroll
+  // ═══════════════════════════════════════
+  // HIDDEN ADMIN PANEL — Firebase Edition
+  // ═══════════════════════════════════════
+  let _admTriggerCount = 0;
+  let _admTriggerTimer = null;
+  let _admCurrentOrder = null;
+  let _admOrders = []; // local cache of Firestore orders
+  let _admDb = null;
+  let _admAuth = null;
+
+  // ── Firebase Init (loaded via CDN) ──
+  async function admInitFirebase() {
+    if (_admDb) return; // already initialised
+    const { initializeApp } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js');
+    const { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js');
+    const { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy } = await import('https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js');
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCqZImzCK-JUDW4Lp0k21quTatqNytNQwk",
+      authDomain: "jayam-catering.firebaseapp.com",
+      projectId: "jayam-catering",
+      storageBucket: "jayam-catering.firebasestorage.app",
+      messagingSenderId: "668337391448",
+      appId: "1:668337391448:web:b484a66d0d9fa99526472d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    _admAuth = getAuth(app);
+    _admDb = getFirestore(app);
+    window._fbModules = { collection, addDoc, getDocs, doc, updateDoc, deleteDoc, query, orderBy, signOut, signInWithEmailAndPassword };
+
+    // Listen for auth state — auto-show panel if already logged in
+    onAuthStateChanged(_admAuth, user => {
+      if (user && document.getElementById('admin-drawer').style.display === 'block') {
+        document.getElementById('adm-login').style.display = 'none';
+        document.getElementById('adm-panel').style.display = 'block';
+        admLoadOrders();
+      }
+    });
+  }
+
+  // Secret trigger — click © 5 times in 3 seconds
+  function handleAdminTrigger() {
+    _admTriggerCount++;
+    clearTimeout(_admTriggerTimer);
+    if (_admTriggerCount >= 5) {
+      _admTriggerCount = 0;
+      openAdmin();
+    } else {
+      _admTriggerTimer = setTimeout(() => { _admTriggerCount = 0; }, 3000);
+    }
+  }
+
+  function openAdmin() {
+    document.getElementById('admin-backdrop').style.display = 'block';
+    const drawer = document.getElementById('admin-drawer');
+    drawer.style.display = 'block';
+    setTimeout(() => { drawer.style.transform = 'translateX(0)'; }, 10);
+    admInitFirebase();
+    // If already logged in, skip login screen
+    if (_admAuth && _admAuth.currentUser) {
+      document.getElementById('adm-login').style.display = 'none';
+      document.getElementById('adm-panel').style.display = 'block';
+      admLoadOrders();
+    } else {
+      document.getElementById('adm-pass').focus();
+    }
+  }
+
+  function closeAdmin() {
+    const drawer = document.getElementById('admin-drawer');
+    drawer.style.transform = 'translateX(100%)';
+    setTimeout(() => {
+      drawer.style.display = 'none';
+      document.getElementById('admin-backdrop').style.display = 'none';
+    }, 400);
+  }
+
+  async function admLogin() {
+    const pass = document.getElementById('adm-pass').value;
+    const errEl = document.getElementById('adm-error');
+    const btn = document.querySelector('#adm-login button');
+    if (!pass) return;
+    try {
+      btn.textContent = '⏳ Logging in...';
+      btn.disabled = true;
+      await admInitFirebase();
+      const { signInWithEmailAndPassword } = window._fbModules;
+      await signInWithEmailAndPassword(_admAuth, 'jayamcateringchennai@gmail.com', pass);
+      errEl.style.display = 'none';
+      document.getElementById('adm-login').style.display = 'none';
+      document.getElementById('adm-panel').style.display = 'block';
+      admLoadOrders();
+    } catch(e) {
+      errEl.textContent = '❌ Wrong password. Please try again.';
+      errEl.style.display = 'block';
+      document.getElementById('adm-pass').value = '';
+      document.getElementById('adm-pass').focus();
+    } finally {
+      btn.textContent = '🔐 Login';
+      btn.disabled = false;
+    }
+  }
+
+  async function admLogout() {
+    const { signOut } = window._fbModules;
+    await signOut(_admAuth);
+    document.getElementById('adm-login').style.display = 'flex';
+    document.getElementById('adm-panel').style.display = 'none';
+    document.getElementById('adm-pass').value = '';
+    document.getElementById('adm-error').style.display = 'none';
+  }
+
+  // ── Firestore CRUD ──
+  async function admLoadOrders() {
+    document.getElementById('adm-tbody').innerHTML = `<tr><td colspan="10" style="text-align:center;padding:2rem;color:#8a7060;">⏳ Loading orders...</td></tr>`;
+    try {
+      const { collection, getDocs, query, orderBy } = window._fbModules;
+      const q = query(collection(_admDb, 'orders'), orderBy('createdAt', 'desc'));
+      const snapshot = await getDocs(q);
+      _admOrders = snapshot.docs.map(d => ({ _docId: d.id, ...d.data() }));
+      admRenderStats();
+      admRenderTable();
+    } catch(e) {
+      document.getElementById('adm-tbody').innerHTML = `<tr><td colspan="10" style="text-align:center;padding:2rem;color:#dc2626;">❌ Error loading: ${e.message}</td></tr>`;
+    }
+  }
+
+  function admGenId() { return 'JCS' + Date.now().toString().slice(-6); }
+
+  function admRenderStats() {
+    const orders = _admOrders;
+    const totalRevenue = orders.reduce((s,o) => s + (parseFloat(o.total)||0), 0);
+    const totalCollected = orders.reduce((s,o) => s + (parseFloat(o.advance)||0), 0);
+    const totalBalance = orders.reduce((s,o) => s + (parseFloat(o.balance)||0), 0);
+    const now = new Date();
+    const thisMonth = orders.filter(o => { const d = new Date(o.createdAt); return d.getMonth()===now.getMonth() && d.getFullYear()===now.getFullYear(); }).length;
+    const statStyle = (color) => `background:#fff; border:1px solid #e8ddd0; border-radius:12px; padding:1rem 1.2rem; border-left:4px solid ${color};`;
+    document.getElementById('adm-stats').innerHTML = `
+      <div style="${statStyle('#E8650A')}"><div style="font-size:0.72rem;color:#8a7060;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Total Orders</div><div style="font-size:1.7rem;font-weight:600;">${orders.length}</div><div style="font-size:0.72rem;color:#8a7060;">${thisMonth} this month</div></div>
+      <div style="${statStyle('#C9961A')}"><div style="font-size:0.72rem;color:#8a7060;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Total Revenue</div><div style="font-size:1.7rem;font-weight:600;">₹${totalRevenue.toLocaleString('en-IN')}</div></div>
+      <div style="${statStyle('#16a34a')}"><div style="font-size:0.72rem;color:#8a7060;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Collected</div><div style="font-size:1.7rem;font-weight:600;">₹${totalCollected.toLocaleString('en-IN')}</div></div>
+      <div style="${statStyle('#dc2626')}"><div style="font-size:0.72rem;color:#8a7060;text-transform:uppercase;letter-spacing:1px;margin-bottom:0.3rem;">Balance Pending</div><div style="font-size:1.7rem;font-weight:600;">₹${totalBalance.toLocaleString('en-IN')}</div></div>
+    `;
+  }
+
+  function admShowTab(tab) {
+    document.getElementById('adm-orders-panel').style.display = tab==='orders' ? 'block' : 'none';
+    document.getElementById('adm-new-panel').style.display = tab==='new' ? 'block' : 'none';
+    document.getElementById('adm-tab-orders').style.cssText = `padding:0.6rem 1.2rem;background:none;border:none;border-bottom:2px solid ${tab==='orders'?'#E8650A':'transparent'};margin-bottom:-2px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;color:${tab==='orders'?'#E8650A':'#8a7060'};cursor:pointer;`;
+    document.getElementById('adm-tab-new').style.cssText = `padding:0.6rem 1.2rem;background:none;border:none;border-bottom:2px solid ${tab==='new'?'#E8650A':'transparent'};margin-bottom:-2px;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;color:${tab==='new'?'#E8650A':'#8a7060'};cursor:pointer;`;
+    if (tab==='orders') admRenderTable();
+  }
+
+  function admFmtDate(dateStr) {
+    if (!dateStr) return '—';
+    return new Date(dateStr).toLocaleDateString('en-IN', {day:'2-digit',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});
+  }
+
+  function admRenderTable() {
+    const search = (document.getElementById('adm-search').value||'').toLowerCase();
+    const evtFilter = document.getElementById('adm-filter-event').value;
+    const monthFilter = document.getElementById('adm-filter-month').value;
+    let filtered = _admOrders.filter(o => {
+      const ms = !search || o.name.toLowerCase().includes(search) || o.phone.includes(search);
+      const me = !evtFilter || o.event===evtFilter;
+      const mm = !monthFilter || o.date.startsWith(monthFilter);
+      return ms && me && mm;
+    });
+    const evtBadge = {Marriage:'#fef3c7;color:#92400e',Birthday:'#fce7f3;color:#9d174d',Corporate:'#dbeafe;color:#1e40af',Religious:'#d1fae5;color:#065f46',Other:'#f3f4f6;color:#374151'};
+    const stBadge = {Paid:'#d1fae5;color:#065f46',Partial:'#fef3c7;color:#92400e',Pending:'#fee2e2;color:#991b1b'};
+    const badge = (txt, style) => `<span style="display:inline-block;padding:0.2rem 0.6rem;border-radius:50px;font-size:0.72rem;font-weight:600;background:${style.split(';')[0]};${style.split(';')[1]||''}">${txt}</span>`;
+    const tdStyle = `padding:0.85rem 1rem; border-top:1px solid #e8ddd0; font-size:0.84rem; vertical-align:middle;`;
+    const tbody = document.getElementById('adm-tbody');
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr><td colspan="10" style="text-align:center;padding:3rem;color:#8a7060;">📋 No orders found</td></tr>`;
+      return;
+    }
+    tbody.innerHTML = filtered.map(o => `<tr onmouseover="this.style.background='#fdf9f5'" onmouseout="this.style.background=''">
+      <td style="${tdStyle}"><strong style="color:#E8650A;font-size:0.75rem;">${o.id}</strong></td>
+      <td style="${tdStyle}"><div style="font-weight:500;">${o.name}</div><div style="color:#8a7060;font-size:0.76rem;">📞 ${o.phone}</div></td>
+      <td style="${tdStyle}">${badge(o.event, evtBadge[o.event]||'#f3f4f6;color:#374151')}</td>
+      <td style="${tdStyle};font-size:0.8rem;white-space:nowrap;">${admFmtDate(o.date)}</td>
+      <td style="${tdStyle};text-align:center;"><strong>${o.guests}</strong></td>
+      <td style="${tdStyle};font-weight:600;">₹${parseFloat(o.total||0).toLocaleString('en-IN')}</td>
+      <td style="${tdStyle};color:#16a34a;font-weight:500;">₹${parseFloat(o.advance||0).toLocaleString('en-IN')}</td>
+      <td style="${tdStyle};color:#dc2626;font-weight:500;">₹${parseFloat(o.balance||0).toLocaleString('en-IN')}</td>
+      <td style="${tdStyle}">${badge(o.status, stBadge[o.status]||'#fee2e2;color:#991b1b')}</td>
+      <td style="${tdStyle}">
+        <div style="display:flex;gap:0.3rem;">
+          <button onclick="admViewReceipt('${o.id}')" title="Receipt" style="border:1px solid #e8ddd0;border-radius:5px;padding:0.3rem 0.5rem;background:#f8f4ef;cursor:pointer;font-size:0.8rem;">🧾</button>
+          <button onclick="admEditOrder('${o._docId}')" title="Edit" style="border:1px solid #e8ddd0;border-radius:5px;padding:0.3rem 0.5rem;background:#f8f4ef;cursor:pointer;font-size:0.8rem;">✏️</button>
+          <button onclick="admDeleteOrder('${o._docId}')" title="Delete" style="border:1px solid #fee2e2;border-radius:5px;padding:0.3rem 0.5rem;background:#fff5f5;cursor:pointer;font-size:0.8rem;color:#dc2626;">🗑️</button>
+        </div>
+      </td>
+    </tr>`).join('');
+  }
+
+  function admClearFilters() {
+    document.getElementById('adm-search').value = '';
+    document.getElementById('adm-filter-event').value = '';
+    document.getElementById('adm-filter-month').value = '';
+    admRenderTable();
+  }
+
+  function admCalcBalance() {
+    const t = parseFloat(document.getElementById('af-total').value)||0;
+    const a = parseFloat(document.getElementById('af-advance').value)||0;
+    document.getElementById('af-balance').value = Math.max(0, t-a);
+  }
+
+  function admResetForm() {
+    ['af-name','af-phone','af-event','af-date','af-guests','af-menu','af-total','af-advance','af-balance','af-status','af-address','af-notes'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value = el.tagName==='SELECT' ? el.options[0].value : '';
+    });
+    document.getElementById('adm-edit-id').value = '';
+    document.getElementById('adm-form-title').textContent = '📝 Add New Order';
+  }
+
+  async function admSaveOrder() {
+    const name=document.getElementById('af-name').value.trim();
+    const phone=document.getElementById('af-phone').value.trim();
+    const event=document.getElementById('af-event').value;
+    const date=document.getElementById('af-date').value;
+    const guests=document.getElementById('af-guests').value;
+    const total=document.getElementById('af-total').value;
+    if (!name||!phone||!event||!date||!guests||!total) { alert('⚠️ Please fill all required fields (*)'); return; }
+    const editDocId = document.getElementById('adm-edit-id').value;
+    const order = {
+      id: editDocId ? (_admOrders.find(o=>o._docId===editDocId)?.id || admGenId()) : admGenId(),
+      name, phone, event, date, guests,
+      menu: document.getElementById('af-menu').value,
+      total, advance: document.getElementById('af-advance').value||0,
+      balance: document.getElementById('af-balance').value||total,
+      status: document.getElementById('af-status').value,
+      address: document.getElementById('af-address').value,
+      notes: document.getElementById('af-notes').value,
+      createdAt: editDocId ? (_admOrders.find(o=>o._docId===editDocId)?.createdAt||Date.now()) : Date.now()
+    };
+    const saveBtn = document.querySelector('[onclick="admSaveOrder()"]');
+    saveBtn.textContent = '⏳ Saving...'; saveBtn.disabled = true;
+    try {
+      const { collection, addDoc, doc, updateDoc } = window._fbModules;
+      if (editDocId) {
+        await updateDoc(doc(_admDb, 'orders', editDocId), order);
+      } else {
+        await addDoc(collection(_admDb, 'orders'), order);
+      }
+      admResetForm();
+      await admLoadOrders();
+      admShowTab('orders');
+      alert(`✅ Order ${editDocId?'updated':'saved'}! ID: ${order.id}`);
+    } catch(e) {
+      alert('❌ Error saving: ' + e.message);
+    } finally {
+      saveBtn.textContent = '💾 Save Order'; saveBtn.disabled = false;
+    }
+  }
+
+  function admEditOrder(docId) {
+    const o = _admOrders.find(o=>o._docId===docId); if(!o) return;
+    document.getElementById('adm-edit-id').value=o._docId;
+    document.getElementById('af-name').value=o.name;
+    document.getElementById('af-phone').value=o.phone;
+    document.getElementById('af-event').value=o.event;
+    document.getElementById('af-date').value=o.date;
+    document.getElementById('af-guests').value=o.guests;
+    document.getElementById('af-menu').value=o.menu||'';
+    document.getElementById('af-total').value=o.total;
+    document.getElementById('af-advance').value=o.advance;
+    document.getElementById('af-balance').value=o.balance;
+    document.getElementById('af-status').value=o.status;
+    document.getElementById('af-address').value=o.address||'';
+    document.getElementById('af-notes').value=o.notes||'';
+    document.getElementById('adm-form-title').textContent = '✏️ Edit Order — '+o.id;
+    admShowTab('new');
+  }
+
+  async function admDeleteOrder(docId) {
+    if (!confirm('⚠️ Delete this order? This cannot be undone.')) return;
+    try {
+      const { doc, deleteDoc } = window._fbModules;
+      await deleteDoc(doc(_admDb, 'orders', docId));
+      await admLoadOrders();
+    } catch(e) { alert('❌ Error: ' + e.message); }
+  }
+
+  function admViewReceipt(orderId) {
+    const o = _admOrders.find(o=>o.id===orderId); if(!o) return;
+    _admCurrentOrder = o;
+    document.getElementById('adm-receipt-content').innerHTML = `
+      <div style="text-align:center;margin-bottom:1.5rem;">
+        <div style="font-family:'Yatra One',cursive;font-size:1.8rem;color:#E8650A;">🍛 Jayam Catering Services</div>
+        <div style="font-family:'Noto Sans Tamil',sans-serif;font-size:0.85rem;color:#8a7060;">ஜெயம் கேட்டரிங் சர்வீசஸ்</div>
+        <div style="font-size:0.78rem;color:#8a7060;margin-top:0.3rem;">📞 9710733773 | 9941345059 | 9841112467<br>📍 Chennai, Tamil Nadu</div>
+      </div>
+      <hr style="border:none;border-top:2px dashed #e8ddd0;margin:1rem 0;">
+      <div style="font-size:0.7rem;letter-spacing:3px;text-transform:uppercase;color:#8a7060;text-align:center;margin-bottom:1rem;">✦ Order Receipt / Invoice ✦</div>
+      <div style="text-align:right;font-size:0.83rem;color:#8a7060;margin-bottom:1rem;"><strong>Order ID:</strong> ${o.id}<br><strong>Date:</strong> ${new Date(o.createdAt).toLocaleDateString('en-IN',{day:'2-digit',month:'long',year:'numeric'})}</div>
+      <hr style="border:none;border-top:2px dashed #e8ddd0;margin:1rem 0;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem 1.5rem;margin-bottom:1rem;">
+        <div><div style="font-size:0.73rem;color:#8a7060;margin-bottom:0.1rem;">Customer Name</div><div style="font-weight:500;">${o.name}</div></div>
+        <div><div style="font-size:0.73rem;color:#8a7060;margin-bottom:0.1rem;">Phone</div><div style="font-weight:500;">${o.phone}</div></div>
+        <div><div style="font-size:0.73rem;color:#8a7060;margin-bottom:0.1rem;">Event Type</div><div style="font-weight:500;">${o.event}</div></div>
+        <div><div style="font-size:0.73rem;color:#8a7060;margin-bottom:0.1rem;">Event Date</div><div style="font-weight:500;">${admFmtDate(o.date)}</div></div>
+        <div><div style="font-size:0.73rem;color:#8a7060;margin-bottom:0.1rem;">No. of Guests</div><div style="font-weight:500;">${o.guests} persons</div></div>
+        <div><div style="font-size:0.73rem;color:#8a7060;margin-bottom:0.1rem;">Menu</div><div style="font-weight:500;">${o.menu||'As discussed'}</div></div>
+        ${o.address?`<div style="grid-column:1/-1;"><div style="font-size:0.73rem;color:#8a7060;margin-bottom:0.1rem;">Address</div><div style="font-weight:500;">${o.address}</div></div>`:''}
+        ${o.notes?`<div style="grid-column:1/-1;"><div style="font-size:0.73rem;color:#8a7060;margin-bottom:0.1rem;">Notes</div><div style="font-weight:500;">${o.notes}</div></div>`:''}
+      </div>
+      <hr style="border:none;border-top:2px dashed #e8ddd0;margin:1rem 0;">
+      <div style="background:#f8f4ef;border-radius:8px;padding:1rem;">
+        <div style="display:flex;justify-content:space-between;font-size:0.88rem;padding:0.25rem 0;"><span>Total Amount</span><span>₹${parseFloat(o.total).toLocaleString('en-IN')}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:0.88rem;padding:0.25rem 0;"><span>Advance Paid</span><span style="color:#16a34a;">− ₹${parseFloat(o.advance||0).toLocaleString('en-IN')}</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:1rem;font-weight:700;padding:0.5rem 0 0;border-top:1px solid #e8ddd0;margin-top:0.3rem;color:#E8650A;"><span>Balance Due</span><span>₹${parseFloat(o.balance||0).toLocaleString('en-IN')}</span></div>
+        <div style="text-align:right;margin-top:0.5rem;"><span style="display:inline-block;padding:0.2rem 0.8rem;border-radius:50px;font-size:0.78rem;font-weight:600;background:${o.status==='Paid'?'#d1fae5;color:#065f46':o.status==='Partial'?'#fef3c7;color:#92400e':'#fee2e2;color:#991b1b'}">Payment: ${o.status}</span></div>
+      </div>
+      <div style="text-align:center;margin-top:1.5rem;font-size:0.78rem;color:#8a7060;">
+        <div>Thank you for choosing Jayam Catering Services! 🙏</div>
+        <div style="font-family:'Noto Sans Tamil',sans-serif;margin-top:0.3rem;">ஜெயம் கேட்டரிங் சர்வீசஸை தேர்வு செய்ததற்கு நன்றி!</div>
+        <div style="margin-top:0.8rem;font-style:italic;">"Every Feast, A Joyful Memory"</div>
+      </div>`;
+    const modal = document.getElementById('adm-receipt-modal');
+    modal.style.display = 'flex';
+  }
+
+  function admCloseReceipt() { document.getElementById('adm-receipt-modal').style.display = 'none'; }
+
+  function admEmailReceipt() {
+    const o = _admCurrentOrder; if(!o) return;
+    const sub = encodeURIComponent(`Order Receipt — ${o.id} | Jayam Catering Services`);
+    const body = encodeURIComponent(`Dear ${o.name},\n\nThank you for booking Jayam Catering Services!\n\nOrder ID: ${o.id}\nEvent: ${o.event}\nDate: ${admFmtDate(o.date)}\nGuests: ${o.guests}\nMenu: ${o.menu||'As discussed'}\n${o.address?'Address: '+o.address+'\n':''}\nTotal: ₹${parseFloat(o.total).toLocaleString('en-IN')}\nAdvance: ₹${parseFloat(o.advance||0).toLocaleString('en-IN')}\nBalance: ₹${parseFloat(o.balance||0).toLocaleString('en-IN')}\nStatus: ${o.status}\n\nJayam Catering Services\n📞 9710733773 | 9841112467\n📍 Chennai, Tamil Nadu\n"Every Feast, A Joyful Memory"`);
+    window.open(`mailto:?subject=${sub}&body=${body}`);
+  }
+
+  // Close receipt modal on backdrop click
+  document.getElementById('adm-receipt-modal').addEventListener('click', function(e) { if(e.target===this) admCloseReceipt(); });
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
